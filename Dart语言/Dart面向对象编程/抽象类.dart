@@ -23,4 +23,3 @@ class Rectangle extends Shape {
     return w * h;
   }
 }
-
