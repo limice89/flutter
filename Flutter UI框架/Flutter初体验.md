@@ -125,3 +125,148 @@ Scaffold是什么呢？
 * Scaffold也有一些属性，比如`appBar`和`body`；
 * appBar是用于设计导航栏的，我们传入了一个`title属性`；
 * body是页面的内容部分，我们传入了之前已经创建好的Center中包裹的一个Text的Widget；
+
+## 案例学习
+
+### 自定义Widget
+![自定义widget](images/自定义widget.png)
+
+* 标题的Widget：使用一个Text Widget完成；
+* 描述的Widget：使用一个Text Widget完成；
+* 图片的Widget：使用一个Image Widget完成；
+* 上面三个Widget要垂直排列，我们可以使用一个Column的Widget（上一个章节中我们使用了一次Row是水平排列的）
+
+### 列表数据展示
+我们创建三个ImageItem竖直排列展示
+代码如下
+```
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(MyApp());
+}
+class MyApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.blueAccent
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Demo"),
+        ),  
+        body: HomeContent(),
+      ),
+    );
+  }
+}
+class HomeContent extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ImageItem("Apple1", "第一行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72j6nk1d4j30u00k0n0j.jpg"),
+        ImageItem("Apple2", "第二行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imm9u5zj30u00k0adf.jpg"),
+        ImageItem("Apple3", "第三行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imqlouhj30u00k00v0.jpg")
+      ],
+    );
+  }
+}
+class ImageItem extends StatelessWidget{
+  String title;
+  String detail;
+  String imgUrl;
+  ImageItem(this.title,this.detail,this.imgUrl);
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(title,style: TextStyle(fontSize: 20)),
+        Text(detail,style: TextStyle(fontSize: 14)),
+        Image.network(imgUrl),
+      ],
+    );
+  }
+
+}
+```
+执行结果:
+![案例](images/flutter1_case1.png)
+>错误信息：下面出现了黄色的斑马线；    
+这是因为在Flutter的布局中，内容是不能超出屏幕范围的，当超出时不会自动变成滚动效果，而是会报下面的错误
+
+如何可以解决这个问题呢？
+
+我们将Column换成ListView即可；    
+ListView可以让自己的子Widget变成滚动的效果
+
+### 细节调整
+* 文字距离图片太近
+* 给Item增加一个内边距和边框
+最终代码如下:
+```
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(MyApp());
+}
+class MyApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.blueAccent
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Demo"),
+        ),  
+        body: HomeContent(),
+      ),
+    );
+  }
+}
+class HomeContent extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        ImageItem("Apple1", "第一行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72j6nk1d4j30u00k0n0j.jpg"),
+        ImageItem("Apple2", "第二行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imm9u5zj30u00k0adf.jpg"),
+        ImageItem("Apple3", "第三行的详情", "https://tva1.sinaimg.cn/large/006y8mN6gy1g72imqlouhj30u00k00v0.jpg")
+      ],
+    );
+  }
+}
+class ImageItem extends StatelessWidget{
+  final String title;
+  final String detail;
+  final String imgUrl;
+  ImageItem(this.title,this.detail,this.imgUrl);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border.all()
+      ),
+      child: Column(
+          children: <Widget>[
+              Text(title,style: TextStyle(fontSize: 20)),
+              Text(detail,style: TextStyle(fontSize: 14)),
+              SizedBox(height: 10,),
+              Image.network(imgUrl),
+          ]
+      ),
+    );
+  }
+
+}
+```
+运行结果:
+
+![案例](images/flutter1_case2.png)
+
+本篇中很多widget未详细说明用法,后面会具体说用法,本篇主要学习一个页面搭建的主要流程.
+本文参考[Flutter(六)之Flutter开发初体验](https://juejin.im/post/5d84a2bd6fb9a06b14181fc8#heading-14)
